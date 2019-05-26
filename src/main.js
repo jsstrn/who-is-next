@@ -6,13 +6,19 @@ import {
   addNameElement
 } from "../lib/element.js";
 
-const handleEvent = event => {
-  if (!isWantedEvent(event)) return;
+const displayWhoIsNext = () => {
   removeNameElement();
   const name = selectWhoIsNext();
   const nameElement = createNameElement(name);
   addNameElement(nameElement);
 };
+
+const handleEvent = event => {
+  if (!isWantedEvent(event)) return;
+  displayWhoIsNext();
+};
+
+displayWhoIsNext();
 
 document.ontouchstart = e => e.preventDefault();
 
