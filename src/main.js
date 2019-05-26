@@ -1,41 +1,26 @@
 import names from "../lib/names.js";
-import rng from "../lib/randomizer.js";
-import isWanted from "../lib/isWanted.js";
+import isWantedEvent from "../lib/isWantedEvent.js";
 import {
   createNameElement,
-  getCurrentNameElement,
   removeNameElement,
   addNameElement
 } from "../lib/element.js";
 
-const getName = names => {
-  const max = names.length - 1;
-  const index = rng.range(max).random();
-  return names[index];
-};
-
-const getNonRecurringName = currentName => {
-  let nextName;
-
-  do {
-    nextName = getName(names);
-  } while (currentName === nextName);
-
-  return nextName;
-};
+let shuffledNames = shuffle(names);
 
 const selectWhoIsNext = () => {
-  const currentName = getCurrentNameElement();
-  const name = getNonRecurringName(currentName);
-  removeNameElement();
-
-  const nameElement = createNameElement(name);
-  addNameElement(nameElement);
+  if (shuffledNames.length === 0) {
+    shuffledNames = shuffle(names);
+  }
+  return shuffledNames.pop();
 };
 
 const handleEvent = event => {
-  if (!isWanted(event)) return;
-  selectWhoIsNext();
+  if (!isWantedEvent(event)) return;
+  removeNameElement();
+  const name = selectWhoIsNext();
+  const nameElement = createNameElement(name);
+  addNameElement(nameElement);
 };
 
 document.ontouchstart = e => e.preventDefault();
